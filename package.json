@@ -1,0 +1,19 @@
+{
+  "name": "speaker-slider",
+  "version": "1.0.0",
+  "description": "a speaker slider for our WAIS 2019 site.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nationalangelcapitalorganization/speaker-slider.git"
+  },
+  "author": "Bryan Hunter",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nationalangelcapitalorganization/speaker-slider/issues"
+  },
+  "homepage": "https://github.com/nationalangelcapitalorganization/speaker-slider#readme"
+}

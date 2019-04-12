@@ -1,0 +1,19 @@
+.speaker-slider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 86vw;
+  margin: auto;
+}
+
+.speaker-container {
+  margin: 20px;
+}
+
+.slick-arrow::before {
+  color: #98c93d;
+}
+
+  .slick-arrow:hover::before {
+    color: #98c93d;
+  }
