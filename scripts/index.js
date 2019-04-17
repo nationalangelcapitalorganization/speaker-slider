@@ -1,11 +1,11 @@
 // Initialize Firebase
 var config = {
-  apiKey: "AIzaSyBmNX_AtUakSCqyhvH0jfqR2CKpJa4ItIo",
-  authDomain: "speakers-b2035.firebaseapp.com",
-  databaseURL: "https://speakers-b2035.firebaseio.com",
-  projectId: "speakers-b2035",
-  storageBucket: "",
-  messagingSenderId: "501023152608"
+  apiKey: "AIzaSyAJ6WSIJjFsZKAW-Au5Cdxjv337ckDVUPc",
+  authDomain: "naco-employee-portal.firebaseapp.com",
+  databaseURL: "https://naco-employee-portal.firebaseio.com",
+  projectId: "naco-employee-portal",
+  storageBucket: "naco-employee-portal.appspot.com",
+  messagingSenderId: "18841270613"
 };
 firebase.initializeApp(config);
 
