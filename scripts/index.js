@@ -17,6 +17,7 @@ const $modals = $('#modals');
 db.collection("speakers").get().then((querySnapshot) => {
   querySnapshot.forEach((doc) => {
     const speaker = doc.data();
+    if (speaker.publish) {
     $speakerList.append(`
         <div class="card speaker-container" data-target="#${speaker.firstName}${speaker.lastName}Modal" data-toggle="modal">
           <img alt="${ speaker.firstName} ${speaker.lastName}" class="card-img-top" src="${speaker.headshot}" />
@@ -45,7 +46,9 @@ db.collection("speakers").get().then((querySnapshot) => {
           </div>
         </div>
     `)
+    }
   });
+
 }).then(() => {
   $('.speaker-slider').slick({
     dots: true,
