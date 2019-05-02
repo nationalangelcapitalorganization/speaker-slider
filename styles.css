@@ -49,3 +49,7 @@ h4 {
   .card:hover {
     border: 1px solid rgba(0,0,0,.125);
   } 
+
+  #modals {
+    max-height: 700px;
+  }

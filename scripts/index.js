@@ -13,10 +13,52 @@ const db = firebase.firestore();
 const $speakerList = $('.speaker-slider').first();
 const $modals = $('#modals');
 
+
+function sendModalMessage(status) {
+  window.parent.postMessage(status, '*'); 
+}
+
+
+window.addEventListener('message', function (event) {
+
+  // IMPORTANT: Check the origin of the data! 
+  if (~event.origin.indexOf('https://www.nacocanada.com')) {
+    // The data has been sent from your site 
+    // The data sent with postMessage is stored in event.data 
+   if (event.data === "closed") {
+     $('.modal').modal('hide');
+    } else {
+      return
+    }
+  } else {
+    // The data hasn't been sent from your site! 
+    // Be careful! Do not use it. 
+    return;
+  }
+}); 
+
+$modals.on('hidden.bs.modal', (e) => {sendModalMessage('closed')})
+$modals.on('shown.bs.modal', (e) => {sendModalMessage('opened')})
+
 // Read firestore data from database in the speakers collection
 db.collection("speakers").get().then((querySnapshot) => {
   querySnapshot.forEach((doc) => {
     const speaker = doc.data();
+    let modalBody = `<div class="modal-body">
+                <h4>${speaker.title}, <a href="${speaker.companySite}" target="_blank">${speaker.company}</a></h4>
+                <div>
+                  <img class="img-responsive" src="${speaker.headshot}" style="float:left; padding:10px; max-width:300px;" />
+                  ${speaker.content}
+                </div>
+              </div>`
+    if (speaker.content.length < 500) {
+      modalBody = `<div class="modal-body">
+                <h4>${speaker.title}, <a href="${speaker.companySite}" target="_blank">${speaker.company}</a></h4>
+                <div style="display: flex; align-items: center;"><img class="img-responsive" src="${speaker.headshot}" style="float:left; padding:10px; max-width:300px;" />
+                  <div>${speaker.content}</div>
+                </div>
+              </div>`
+    }
     if (speaker.publish) {
     $speakerList.append(`
         <div class="card speaker-container" data-target="#${speaker.firstName}${speaker.lastName}Modal" data-toggle="modal">
@@ -28,19 +70,14 @@ db.collection("speakers").get().then((querySnapshot) => {
         </div>
         `);
     $modals.append(`
-        <div aria-hidden="true" aria-labelledby="${speaker.firstName}${speaker.lastName}Modal" class="modal fade" id="${speaker.firstName}${speaker.lastName}Modal" role="dialog" tabindex="-1">
-          <div class="modal-dialog" role="document">
+        <div aria-hidden="true" aria-labelledby="${speaker.firstName}${speaker.lastName}Modal" class="modal" id="${speaker.firstName}${speaker.lastName}Modal" role="dialog" tabindex="-1">
+          <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <h2 class="modal-title">${speaker.firstName} ${speaker.lastName}</h2>
                 <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
               </div>
-              <div class="modal-body">
-                <h4>${speaker.title}, <a href="${speaker.companySite}" target="_blank">${speaker.company}</a></h4>
-                <div style="display: flex; align-items: center;"><img class="img-responsive" src="${speaker.headshot}" style="float:left; padding:10px; max-width:300px;" />
-                  ${speaker.content}
-                </div>
-              </div>
+              ${modalBody}
               <div class="modal-footer"><button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button></div>
             </div>
           </div>
