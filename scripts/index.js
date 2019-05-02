@@ -18,26 +18,26 @@ db.collection("speakers").get().then((querySnapshot) => {
   querySnapshot.forEach((doc) => {
     const speaker = doc.data();
     $speakerList.append(`
-        <div class="card speaker-container" data-target="#${speaker.firstName}Modal" data-toggle="modal">
-          <img alt="Michele Romanow" class="card-img-top" src="https://d3lut3gzcpx87s.cloudfront.net/image_encoded/aHR0cHM6Ly9zaWxrc3RhcnQuczMuYW1hem9uYXdzLmNvbS81Yzk1MDRkMmZkYmE0YjRkNTJjYzBhOWQuanBn/x" />
+        <div class="card speaker-container" data-target="#${speaker.firstName}${speaker.lastName}Modal" data-toggle="modal">
+          <img alt="${ speaker.firstName} ${speaker.lastName}" class="card-img-top" src="${speaker.headshot}" />
           <div class="card-body">
-            <h4 class="card-title">${speaker.firstName}</h4>
-            <p class="card-subtitle mb-2 text-muted">Dragon&#39;s Den &amp; Co-founder &amp; President, Clearbanc</p>
+            <h4 class="card-title">${speaker.firstName} ${speaker.lastName}</h4>
+            <p class="card-subtitle mb-2 text-muted">${speaker.title}, ${speaker.company}</p>
           </div>
         </div>
         `);
     $modals.append(`
-        <div aria-hidden="true" aria-labelledby="${speaker.firstName}Modal" class="modal fade" id="${speaker.firstName}Modal" role="dialog" tabindex="-1">
+        <div aria-hidden="true" aria-labelledby="${speaker.firstName}${speaker.lastName}Modal" class="modal fade" id="${speaker.firstName}${speaker.lastName}Modal" role="dialog" tabindex="-1">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h2 class="modal-title">${speaker.firstName}</h2>
+                <h2 class="modal-title">${speaker.firstName} ${speaker.lastName}</h2>
                 <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
               </div>
               <div class="modal-body">
-                <h4>EVP, Operations, <a href="http://www.techstars.com/" target="_blank">Techstars</a></h4>
-                <div style="display: flex; align-items: center;"><img class="img-responsive" src="https://d3lut3gzcpx87s.cloudfront.net/image_encoded/aHR0cHM6Ly9zaWxrc3RhcnQuczMuYW1hem9uYXdzLmNvbS81Yzk1MDUwOWZkYmE0YjRkNTJjYzBhYTkucG5n/x" style="float:left; padding:10px; max-width:300px;" />
-                  <p>Scott is an executive and founder with experience in technology and early-stage companies. He leads global operations for Techstars across the entire entrepreneurial journey, including Startup Weekend, Startup Week, Mentorship-driven Accelerators and Corporate Innovation.</p>
+                <h4>${speaker.title}, <a href="${speaker.companySite}" target="_blank">${speaker.company}</a></h4>
+                <div style="display: flex; align-items: center;"><img class="img-responsive" src="${speaker.headshot}" style="float:left; padding:10px; max-width:300px;" />
+                  ${speaker.content}
                 </div>
               </div>
               <div class="modal-footer"><button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button></div>
