@@ -14,10 +14,20 @@ const $speakerList = $('.speaker-slider').first();
 const $modals = $('#modals');
 
 
+// Location Cards Open new tab and link to url on click
+
+$('.location-container').on('click', (e) => {
+  const card = e.currentTarget
+  const cardUrl = $(card).data('href')
+  window.open(cardUrl, '_blank')
+})
+
+
+// Communication between iFrame and Parent
+
 function sendModalMessage(status) {
   window.parent.postMessage(status, '*'); 
 }
-
 
 window.addEventListener('message', function (event) {
 
@@ -40,6 +50,7 @@ window.addEventListener('message', function (event) {
 $modals.on('hidden.bs.modal', (e) => {sendModalMessage('closed')})
 $modals.on('shown.bs.modal', (e) => {sendModalMessage('opened')})
 
+
 // Read firestore data from database in the speakers collection
 db.collection("speakers").get().then((querySnapshot) => {
   querySnapshot.forEach((doc) => {
@@ -47,14 +58,14 @@ db.collection("speakers").get().then((querySnapshot) => {
     let modalBody = `<div class="modal-body">
                 <h4>${speaker.title}, <a href="${speaker.companySite}" target="_blank">${speaker.company}</a></h4>
                 <div>
-                  <img class="img-responsive" src="${speaker.headshot}" style="float:left; padding:10px; max-width:300px;" />
+                  <img class="img-responsive" src="${speaker.headshot}" style="float:left; padding:10px; max-width:250px;" />
                   ${speaker.content}
                 </div>
               </div>`
     if (speaker.content.length < 500) {
       modalBody = `<div class="modal-body">
                 <h4>${speaker.title}, <a href="${speaker.companySite}" target="_blank">${speaker.company}</a></h4>
-                <div style="display: flex; align-items: center;"><img class="img-responsive" src="${speaker.headshot}" style="float:left; padding:10px; max-width:300px;" />
+                <div style="display: flex; align-items: center;"><img class="img-responsive" src="${speaker.headshot}" style="float:left; padding:10px; max-width:250px;" />
                   <div>${speaker.content}</div>
                 </div>
               </div>`
@@ -87,30 +98,16 @@ db.collection("speakers").get().then((querySnapshot) => {
   });
 
 }).then(() => {
+
+  // WAIS Speakers
   $('.speaker-slider').slick({
     dots: true,
     arrows: true,
     infinite: false,
     speed: 300,
-    slidesToShow: 8,
-    slidesToScroll: 8,
+    slidesToShow: 6,
+    slidesToScroll: 6,
     responsive: [
-      {
-        breakpoint: 1800,
-        settings: {
-          slidesToShow: 7,
-          slidesToScroll: 7,
-          infinite: true,
-          dots: true
-        }
-      },
-      {
-        breakpoint: 1600,
-        settings: {
-          slidesToShow: 6,
-          slidesToScroll: 6
-        }
-      },
       {
         breakpoint: 1400,
         settings: {
@@ -132,6 +129,72 @@ db.collection("speakers").get().then((querySnapshot) => {
           slidesToScroll: 3
         }
       },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2
+        }
+      },
+      {
+        breakpoint: 400,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      },
+    ]
+  });
+
+  // Inventure$ Speakers
+  $('.inventures-slider').slick({
+    dots: true,
+    arrows: true,
+    infinite: false,
+    speed: 300,
+    slidesToShow: 5,
+    slidesToScroll: 5,
+    responsive: [
+      {
+        breakpoint: 1100,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 4
+        }
+      },
+      {
+        breakpoint: 900,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2
+        }
+      },
+      {
+        breakpoint: 400,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      },
+    ]
+  });
+
+  // Locations
+  $('.location-slider').slick({
+    dots: true,
+    arrows: true,
+    infinite: false,
+    speed: 300,
+    slidesToShow: 3,
+    slidesToScroll: 3,
+    responsive: [
       {
         breakpoint: 600,
         settings: {
