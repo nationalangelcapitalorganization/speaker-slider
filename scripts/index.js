@@ -26,7 +26,7 @@ $('.location-container').on('click', (e) => {
 // Communication between iFrame and Parent
 
 function sendModalMessage(status) {
-  window.parent.postMessage(status, '*'); 
+  window.parent.postMessage(status, '*');
 }
 
 window.addEventListener('message', function (event) {
@@ -35,8 +35,8 @@ window.addEventListener('message', function (event) {
   if (~event.origin.indexOf('https://www.nacocanada.com')) {
     // The data has been sent from your site 
     // The data sent with postMessage is stored in event.data 
-   if (event.data === "closed") {
-     $('.modal').modal('hide');
+    if (event.data === "closed") {
+      $('.modal').modal('hide');
     } else {
       return
     }
@@ -45,33 +45,43 @@ window.addEventListener('message', function (event) {
     // Be careful! Do not use it. 
     return;
   }
-}); 
+});
 
-$modals.on('hidden.bs.modal', (e) => {sendModalMessage('closed')})
-$modals.on('shown.bs.modal', (e) => {sendModalMessage('opened')})
+$modals.on('hidden.bs.modal', (e) => { sendModalMessage('closed') })
+$modals.on('shown.bs.modal', (e) => { sendModalMessage('opened') })
 
+// Create and add speakers to slider
 
-// Read firestore data from database in the speakers collection
-db.collection("speakers").get().then((querySnapshot) => {
-  querySnapshot.forEach((doc) => {
-    const speaker = doc.data();
-    let modalBody = `<div class="modal-body">
+const createSpeaker = (speaker) => {
+  let modalBody = `<div class="modal-body">
                 <h4>${speaker.title}, <a href="${speaker.companySite}" target="_blank">${speaker.company}</a></h4>
                 <div>
                   <img class="img-responsive" src="${speaker.headshot}" style="float:left; padding:10px; max-width:250px;" />
                   ${speaker.content}
                 </div>
               </div>`
-    if (speaker.content.length < 500) {
-      modalBody = `<div class="modal-body">
+  if (speaker.content.length < 500) {
+    modalBody = `<div class="modal-body">
                 <h4>${speaker.title}, <a href="${speaker.companySite}" target="_blank">${speaker.company}</a></h4>
                 <div style="display: flex; align-items: center;"><img class="img-responsive" src="${speaker.headshot}" style="float:left; padding:10px; max-width:250px;" />
                   <div>${speaker.content}</div>
                 </div>
               </div>`
-    }
-    if (speaker.publish) {
-    $speakerList.append(`
+  }
+  if (speaker.publish) {
+    if (speaker.priority === "1") {
+      $speakerList.append(`
+        <div class="card speaker-container" data-target="#${speaker.firstName}${speaker.lastName}Modal" data-toggle="modal">
+          <img alt="${ speaker.firstName} ${speaker.lastName}" class="card-img-top" src="${speaker.headshot}" />
+          <div class="keynote-tag">Keynote</div>
+          <div class="card-body">
+            <h4 class="card-title">${speaker.firstName} ${speaker.lastName}</h4>
+            <p class="card-subtitle mb-2 text-muted">${speaker.title}, ${speaker.company}</p>
+          </div>
+        </div>
+        `);
+    } else {
+      $speakerList.append(`
         <div class="card speaker-container" data-target="#${speaker.firstName}${speaker.lastName}Modal" data-toggle="modal">
           <img alt="${ speaker.firstName} ${speaker.lastName}" class="card-img-top" src="${speaker.headshot}" />
           <div class="card-body">
@@ -80,6 +90,7 @@ db.collection("speakers").get().then((querySnapshot) => {
           </div>
         </div>
         `);
+    }
     $modals.append(`
         <div aria-hidden="true" aria-labelledby="${speaker.firstName}${speaker.lastName}Modal" class="modal" id="${speaker.firstName}${speaker.lastName}Modal" role="dialog" tabindex="-1">
           <div class="modal-dialog modal-dialog-scrollable" role="document">
@@ -94,8 +105,47 @@ db.collection("speakers").get().then((querySnapshot) => {
           </div>
         </div>
     `)
+  }
+}
+
+// Speaker Lists
+
+const keynoteList = []
+const priorityList = []
+const regularList = []
+const allSpeakers = []
+
+
+// Read firestore data from database in the speakers collection
+db.collection("speakers").get().then((querySnapshot) => {
+  querySnapshot.forEach((doc) => {
+    const speaker = doc.data();
+    // Separate Speakers into Lists
+    if (speaker.priority === "1") {
+      keynoteList.push(speaker)
+    } else if (speaker.priority === "2") {
+      priorityList.push(speaker)
+    } else {
+      regularList.push(speaker)
     }
   });
+
+
+  for (let i = 0; i < regularList.length; i++) {
+    const ratio = Math.floor(regularList.length / priorityList.length)
+    if (i % ratio === 0 && i / ratio < priorityList.length) {
+      let priorityIndex = i / ratio
+      allSpeakers.push(priorityList[priorityIndex])
+    }
+    allSpeakers.push(regularList[i])
+  }
+  keynoteList.forEach(speaker => {
+    allSpeakers.unshift(speaker)
+  })
+
+  allSpeakers.forEach(speaker => {
+    createSpeaker(speaker)
+  })
 
 }).then(() => {
 

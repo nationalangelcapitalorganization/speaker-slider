@@ -44,6 +44,14 @@ a {
   box-sizing: border-box;
 }
 
+.keynote-tag {
+  background-color: #72bf44;
+  color: #fff;
+  text-align: center;
+  font-weight: bold;
+  padding: 5px;
+}
+
 .slick-arrow::before {
   color: #98c93d;
 }
