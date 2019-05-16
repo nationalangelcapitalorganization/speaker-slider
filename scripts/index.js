@@ -31,18 +31,18 @@ function sendModalMessage(status) {
 
 window.addEventListener('message', function (event) {
 
-  // IMPORTANT: Check the origin of the data! 
+  // IMPORTANT: Check the origin of the data!
   if (~event.origin.indexOf('https://www.nacocanada.com')) {
-    // The data has been sent from your site 
-    // The data sent with postMessage is stored in event.data 
+    // The data has been sent from your site
+    // The data sent with postMessage is stored in event.data
     if (event.data === "closed") {
       $('.modal').modal('hide');
     } else {
       return
     }
   } else {
-    // The data hasn't been sent from your site! 
-    // Be careful! Do not use it. 
+    // The data hasn't been sent from your site!
+    // Be careful! Do not use it.
     return;
   }
 });
@@ -53,6 +53,8 @@ $modals.on('shown.bs.modal', (e) => { sendModalMessage('opened') })
 // Create and add speakers to slider
 
 const createSpeaker = (speaker) => {
+  const speakerFirstName = speaker.firstName.replace(/[ ,.]/g, "");
+  const speakerLastName = speaker.lastName.replace(/[ ,.]/g, "");
   let modalBody = `<div class="modal-body">
                 <h4>${speaker.title}, <a href="${speaker.companySite}" target="_blank">${speaker.company}</a></h4>
                 <div>
@@ -60,7 +62,7 @@ const createSpeaker = (speaker) => {
                   ${speaker.content}
                 </div>
               </div>`
-  if (speaker.content.length < 500) {
+  if (speaker.content.length < 250) {
     modalBody = `<div class="modal-body">
                 <h4>${speaker.title}, <a href="${speaker.companySite}" target="_blank">${speaker.company}</a></h4>
                 <div style="display: flex; align-items: center;"><img class="img-responsive" src="${speaker.headshot}" style="float:left; padding:10px; max-width:250px;" />
@@ -71,7 +73,7 @@ const createSpeaker = (speaker) => {
   if (speaker.publish) {
     if (speaker.priority === "1") {
       $speakerList.append(`
-        <div class="card speaker-container" data-target="#${speaker.firstName}${speaker.lastName}Modal" data-toggle="modal">
+        <div class="card speaker-container" data-target="#${speakerFirstName}${speakerLastName}Modal" data-toggle="modal">
           <img alt="${ speaker.firstName} ${speaker.lastName}" class="card-img-top" src="${speaker.headshot}" />
           <div class="keynote-tag">Keynote</div>
           <div class="card-body">
@@ -82,7 +84,7 @@ const createSpeaker = (speaker) => {
         `);
     } else {
       $speakerList.append(`
-        <div class="card speaker-container" data-target="#${speaker.firstName}${speaker.lastName}Modal" data-toggle="modal">
+        <div class="card speaker-container" data-target="#${speakerFirstName}${speakerLastName}Modal" data-toggle="modal">
           <img alt="${ speaker.firstName} ${speaker.lastName}" class="card-img-top" src="${speaker.headshot}" />
           <div class="card-body">
             <h4 class="card-title">${speaker.firstName} ${speaker.lastName}</h4>
@@ -92,7 +94,7 @@ const createSpeaker = (speaker) => {
         `);
     }
     $modals.append(`
-        <div aria-hidden="true" aria-labelledby="${speaker.firstName}${speaker.lastName}Modal" class="modal" id="${speaker.firstName}${speaker.lastName}Modal" role="dialog" tabindex="-1">
+        <div aria-hidden="true" aria-labelledby="${speakerFirstName}${speakerLastName}Modal" class="modal" id="${speakerFirstName}${speakerLastName}Modal" role="dialog" tabindex="-1">
           <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
               <div class="modal-header">
