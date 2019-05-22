@@ -62,13 +62,31 @@ const createSpeaker = (speaker) => {
                   ${speaker.content}
                 </div>
               </div>`
+  if (speaker.companySite === "#") {
+    modalBody = `<div class="modal-body">
+                <h4>${speaker.title}, ${speaker.company}</h4>
+                <div>
+                  <img class="img-responsive" src="${speaker.headshot}" style="float:left; padding:10px; max-width:250px;" />
+                  ${speaker.content}
+                </div>
+              </div>`
+  }
   if (speaker.content.length < 250) {
+    if (speaker.companySite === "#") {
+      modalBody = `<div class="modal-body">
+                <h4>${speaker.title}, ${speaker.company}</h4>
+                <div style="display: flex; align-items: center;"><img class="img-responsive" src="${speaker.headshot}" style="float:left; padding:10px; max-width:250px;" />
+                  <div>${speaker.content}</div>
+                </div>
+              </div>`
+    } else {
     modalBody = `<div class="modal-body">
                 <h4>${speaker.title}, <a href="${speaker.companySite}" target="_blank">${speaker.company}</a></h4>
                 <div style="display: flex; align-items: center;"><img class="img-responsive" src="${speaker.headshot}" style="float:left; padding:10px; max-width:250px;" />
                   <div>${speaker.content}</div>
                 </div>
               </div>`
+    }
   }
   if (speaker.publish) {
     if (speaker.priority === "1") {
